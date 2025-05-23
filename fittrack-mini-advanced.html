@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FitTrack Mini - BMR & Calorie Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    h1, h2 {
+      color: #2e8b57;
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px 0;
+      width: 100%;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>FitTrack Mini</h1>
+
+  <div class="section">
+    <h2>BMR Calculator</h2>
+    <label>Gender:</label>
+    <select id="gender">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+    <label>Weight (kg):</label><input type="number" id="weight">
+    <label>Height (cm):</label><input type="number" id="height">
+    <label>Age:</label><input type="number" id="age">
+    <button onclick="calculateBMR()">Calculate BMR</button>
+    <p id="bmr-result"></p>
+  </div>
+
+  <div class="section">
+    <h2>Calorie Tracker</h2>
+    <label>Enter Food Name:</label>
+    <input type="text" id="foodName" placeholder="e.g. rice, apple, maggi">
+    <label>Quantity:</label><input type="number" id="quantity" value="1">
+    <button onclick="addCalories()">Add</button>
+    <p id="calorie-result">Total Calories: 0 kcal</p>
+    <p id="food-feedback" style="color: red;"></p>
+  </div>
+
+  <script>
+    let totalCalories = 0;
+    const foodCalories = {
+      "maggi": 350,
+      "bread": 70,
+      "roti": 100,
+      "cake": 250,
+      "rice": 130,
+      "dal": 120,
+      "egg": 78,
+      "banana": 105,
+      "apple": 95,
+      "milk": 150,
+      "tea": 30,
+      "coffee": 40,
+      "chapati": 100,
+      "biryani": 300,
+      "idli": 70,
+      "dosa": 180,
+      "paneer": 265,
+      "chicken": 240,
+      "fish": 200,
+      "burger": 295,
+      "pizza": 285
+    };
+
+    function calculateBMR() {
+      const gender = document.getElementById("gender").value;
+      const weight = parseFloat(document.getElementById("weight").value);
+      const height = parseFloat(document.getElementById("height").value);
+      const age = parseInt(document.getElementById("age").value);
+
+      if (isNaN(weight) || isNaN(height) || isNaN(age)) {
+        document.getElementById("bmr-result").innerText = "Please enter all values correctly.";
+        return;
+      }
+
+      let bmr;
+      if (gender === "male") {
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+      } else {
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+      }
+
+      document.getElementById("bmr-result").innerText = `Your BMR is ${bmr.toFixed(2)} kcal/day`;
+    }
+
+    function addCalories() {
+      const food = document.getElementById("foodName").value.trim().toLowerCase();
+      const quantity = parseInt(document.getElementById("quantity").value);
+      const feedback = document.getElementById("food-feedback");
+
+      if (!food || isNaN(quantity) || quantity <= 0) {
+        feedback.innerText = "Please enter a valid food and quantity.";
+        return;
+      }
+
+      if (foodCalories.hasOwnProperty(food)) {
+        const calories = foodCalories[food] * quantity;
+        totalCalories += calories;
+        document.getElementById("calorie-result").innerText = `Total Calories: ${totalCalories} kcal`;
+        feedback.innerText = "";
+      } else {
+        feedback.innerText = "Food not found. Try a common food like rice, roti, apple, etc.";
+      }
+    }
+  </script>
+
+</body>
+</html>
